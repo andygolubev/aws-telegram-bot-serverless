@@ -2,32 +2,32 @@
 ## CREATE a Layer for the bot-lambda ##
 
 resource "null_resource" "pip-install" {
-    provisioner "local-exec" {
-      command = <<-EOF
+  provisioner "local-exec" {
+    command = <<-EOF
       mkdir -p /tmp/packages/python/
       python3 -m venv /tmp/temp-venv
       source /tmp/temp-venv/bin/activate
       pip3 install -r ../lambda-bot/bot-function/requirements.txt -t /tmp/packages/python/
       EOF
-    }
+  }
 }
 
 data "archive_file" "layer-zip-file" {
-    type = "zip"
+  type = "zip"
 
-    source_dir  = "/tmp/packages/"
-    output_path = "/tmp/layer-package.zip"
+  source_dir  = "/tmp/packages/"
+  output_path = "/tmp/layer-package.zip"
 
-    depends_on = [ null_resource.pip-install,]
+  depends_on = [null_resource.pip-install, ]
 }
 
 resource "aws_lambda_layer_version" "lambda-layer-for-packages" {
-    filename   = "/tmp/layer-package.zip"
-    layer_name = "lambda-layer-for-packages"
+  filename   = "/tmp/layer-package.zip"
+  layer_name = "lambda-layer-for-packages"
 
-    compatible_runtimes = ["python3.10"]
+  compatible_runtimes = ["python3.10"]
 
-    depends_on = [ data.archive_file.layer-zip-file, ]
+  depends_on = [data.archive_file.layer-zip-file, ]
 }
 
 
@@ -36,10 +36,10 @@ resource "aws_lambda_layer_version" "lambda-layer-for-packages" {
 ## CREATE the bot-lambda ##
 
 data "archive_file" "lambda-bot-zip-file" {
-    type = "zip"
+  type = "zip"
 
-    source_dir = "../lambda-bot/bot-function/"
-    output_path = "/tmp/lambda-bot.zip"
+  source_dir  = "../lambda-bot/bot-function/"
+  output_path = "/tmp/lambda-bot.zip"
 }
 
 resource "aws_lambda_function" "bot-lambda" {
@@ -64,18 +64,21 @@ resource "aws_lambda_function" "bot-lambda" {
     }
   }
 
-  depends_on = [ data.archive_file.lambda-bot-zip-file, ]
+  depends_on = [data.archive_file.lambda-bot-zip-file, ]
 }
 
-
+resource "aws_lambda_function_url" "bot-lambda-invocation-url" {
+  function_name      = aws_lambda_function.bot-lambda.function_name
+  authorization_type = "NONE"
+}
 
 ## CREATE the webhook-lambda ##
 
 data "archive_file" "webhook-function-zip-file" {
-    type = "zip"
+  type = "zip"
 
-    source_dir = "../lambda-bot/webhook-function/"
-    output_path = "/tmp/lambda-webhook.zip"
+  source_dir  = "../lambda-bot/webhook-function/"
+  output_path = "/tmp/lambda-webhook.zip"
 }
 
 resource "aws_lambda_function" "webhook-lambda" {
@@ -98,10 +101,11 @@ resource "aws_lambda_function" "webhook-lambda" {
 
   environment {
     variables = {
-      CALLBACK_URL = aws_apigatewayv2_api.call-back-api.api_endpoint
+      # CALLBACK_URL = aws_apigatewayv2_stage.dev.invoke_url
+      CALLBACK_URL = aws_lambda_function_url.bot-lambda-invocation-url.function_url
     }
   }
 
-  depends_on = [ data.archive_file.webhook-function-zip-file, ]
+  depends_on = [data.archive_file.webhook-function-zip-file, ]
 }
 

@@ -1,21 +1,25 @@
 variable "aws_region" {
   description = "AWS Region"
-  type    = string
+  type        = string
+}
+
+variable "bot_token" {
+  type = string
 }
 
 variable "aws_public_az_1" {
   description = "AWS Subnet public 1"
-  type    = string
+  type        = string
 }
 
 variable "aws_public_az_2" {
   description = "AWS Subnet public 2"
-  type    = string
+  type        = string
 }
 
 variable "aws_public_az_3" {
   description = "AWS Subnet public 3"
-  type    = string
+  type        = string
 }
 
 variable "ami" {

@@ -4,6 +4,11 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
 region = os.environ.get('AWS_CLOUD_REGION')
 
 def get_bot_token_from_secret_manager():
@@ -22,8 +27,6 @@ def get_bot_token_from_secret_manager():
             SecretId=secret_name
         )
     except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
     # Decrypts secret using the associated KMS key.
@@ -50,23 +53,37 @@ def send_welcome(message):
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def echo_message(message):
-    print("start")
+    print("start bot message handler")
     print(message)
-    print("end")
-    bot.reply_to(message, f"Answer7: {message.text}")
-    bot.send_message(chat_id=message.chat.id,  text="-----")
-    bot.stop_polling()
+    print("end bot message handler")
+    bot.reply_to(message, f"Answer to: {message.text}")
+    #bot.send_message(chat_id=message.chat.id,  text="-----")
+    # bot.stop_polling()
 
     
 
 
 def lambda_handler(event, context):
+    print("event:")
+    logger.debug("event:")
     print(event)
+    print("event body:")
+    print(event['body'])
+    print("context:")
     print(context)
     
-    update = telebot.types.Update.de_json(event)
+
+    # return {
+    #     'statusCode': 200,
+    #     'body': json.dumps('all good')
+    # }
+
+
+    update = telebot.types.Update.de_json(event['body'])
+    print("This is bot update structure:")
     print(update)
-    bot.process_new_updates([update])
+    bot.reply_to(update.message, f"Answer to: {update.message.text}")
+    # bot.process_new_updates([update])
     
     return {
         'statusCode': 200,

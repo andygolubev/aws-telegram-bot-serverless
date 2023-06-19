@@ -1,29 +1,29 @@
 terraform {
 
-    # for AWS Enable this section after provisioning of S3 and DynamoDB table
-    #
-    # REGION will be replaced in a pipeline
-    #
-    backend "s3" {
-        bucket = "terraform-state-for-telegram-bot-serverless"
-        key = "terraform-state-for-telegram-bot-serverless/terraform.tfstate"
-        region = "us-east-1"
-        dynamodb_table = "terraform-state-for-telegram-bot-serverless-locking"
-        encrypt = true
-    }
-    # end
+  # for AWS Enable this section after provisioning of S3 and DynamoDB table
+  #
+  # REGION will be replaced in a pipeline
+  #
+  backend "s3" {
+    bucket         = "terraform-state-for-telegram-bot-serverless"
+    key            = "terraform-state-for-telegram-bot-serverless/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-state-for-telegram-bot-serverless-locking"
+    encrypt        = true
+  }
+  # end
 
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = " ~> 4.0"
-        }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = " ~> 4.0"
+    }
   }
 
 }
 
 provider "aws" {
-    region =  var.aws_region
+  region = var.aws_region
 }
 
 ### 
@@ -50,7 +50,7 @@ provider "aws" {
 #     versioning_configuration {
 #     status = "Enabled"
 #     }
-  
+
 # }
 
 # resource "aws_s3_bucket_server_side_encryption_configuration" "terraform-state-encryption" {
@@ -60,7 +60,7 @@ provider "aws" {
 #         sse_algorithm = "AES256"
 #       }
 #     }
-  
+
 # }
 
 # # DynamoDB table for LOCKs storage

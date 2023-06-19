@@ -35,7 +35,7 @@ def get_bot_token_from_secret_manager():
 
 bot = telebot.TeleBot(get_bot_token_from_secret_manager())
 
-    
+
 def lambda_handler(event, context):
     
     callback_url = os.environ.get('CALLBACK_URL')
@@ -57,5 +57,3 @@ def lambda_handler(event, context):
         'body': json.dumps('Current callback url: ' + str(callback_url))
     }
     
-
-

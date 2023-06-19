@@ -9,7 +9,7 @@ data "aws_ami" "ubuntu" {
 data "aws_ami" "eks" {
   most_recent = true
   filter {
-      name   = "name"
-      values = ["amazon-eks-node-1.25-v20230322"]
+    name   = "name"
+    values = ["amazon-eks-node-1.25-v20230322"]
   }
 }
