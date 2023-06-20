@@ -2,14 +2,14 @@
 data "aws_caller_identity" "current-account" {}
 
 resource "aws_s3_bucket" "images-bucket" {
-    bucket = "telegram-bot-serverless-${data.aws_caller_identity.current-account.account_id}"
-    force_destroy = true
+  bucket        = "telegram-bot-serverless1-${data.aws_caller_identity.current-account.account_id}"
+  force_destroy = true
 
-    tags = {
-        Name = "Images bucket"
-        CreatedBy= "Terraform"
-        Region = var.aws_region
-    }
+  tags = {
+    Name      = "Images bucket"
+    CreatedBy = "Terraform"
+    Region    = var.aws_region
+  }
 
 }
 
@@ -17,10 +17,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "images-bucket-name-lifecycle_c
   bucket = aws_s3_bucket.images-bucket.id
 
   rule {
-    id = "clear"
+    id     = "clear"
     status = "Enabled"
 
-        expiration {
+    expiration {
       days = 90
     }
   }

@@ -24,9 +24,10 @@ resource "aws_lambda_function" "bot-lambda" {
 
   environment {
     variables = {
-      AWS_CLOUD_REGION = var.aws_region
-      TOKEN_VAR_NAME   = aws_secretsmanager_secret.bot-token-secret.name
-      LOGGING_LEVEL    = var.logging_level
+      AWS_CLOUD_REGION   = var.aws_region
+      TOKEN_VAR_NAME     = aws_secretsmanager_secret.bot-token-secret.name
+      LOGGING_LEVEL      = var.logging_level
+      IMAGES_BUCKET_NAME = aws_s3_bucket.images-bucket.bucket
     }
   }
 

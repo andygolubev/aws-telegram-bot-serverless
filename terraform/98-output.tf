@@ -9,3 +9,7 @@ output "lambda-bot-invocation-url" {
 output "api-gw-integration-uri" {
   value = aws_apigatewayv2_stage.dev.invoke_url
 }
+
+output "image-bucket" {
+  value = aws_s3_bucket.images-bucket.bucket
+}

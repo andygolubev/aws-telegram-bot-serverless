@@ -3,6 +3,7 @@ import json
 import boto3
 import os
 from botocore.exceptions import ClientError
+from io import BytesIO
 
 import logging
 logger = logging.getLogger()
@@ -67,10 +68,47 @@ def lambda_handler(event, context):
     logger.debug(f"APP:: context: {context}")
 
     update = telebot.types.Update.de_json(event['body'])
+
     logger.debug(f"APP:: This is bot update structure: {update}")
-    
-    bot.reply_to(update.message, f"Answer to: {update.message.text}")
-    # bot.process_new_updates([update])
+    logger.debug(f"APP:: Message type: {update.message.content_type}")
+
+    match update.message.content_type:
+        case 'text':
+            bot.reply_to(update.message, f"Send an image instead of this text: {update.message.text}")
+        case 'photo':
+            
+
+            fileID = update.message.photo[-1].file_id
+            logger.debug(f"APP:: fileID: {fileID}")
+            file_info = bot.get_file(fileID)
+            logger.debug(f"APP:: file_info: {file_info}")
+            downloaded_file = bot.download_file(file_info.file_path)
+            logger.debug(f"APP:: image object type : {type(downloaded_file)}")
+
+
+            s3_client = boto3.client('s3')
+            s3_client.upload_fileobj(BytesIO(downloaded_file), os.environ.get('IMAGES_BUCKET_NAME'), fileID) 
+
+            # s3_client = boto3.client('s3')
+            # try:
+            #     response = s3_client.upload_fileobj(downloaded_file, "telegram-bot-serverless-044694793931", "777.png")
+            # except ClientError as e:
+            #     logging.error(e)
+
+            #AgACAgIAAxkBAAIFXGSRpuBC3YCvLedStrazkrtFySIBAAI7zjEbVD-QSGAhvPqPsCQGAQADAgADeAADLwQ
+            #AgACAgIAAxkBAAIFXmSRpvE9o5Z7vP8ThBl_LbYy3jbbAAI8zjEbVD-QSHaHIKNsHybiAQADAgADeQADLwQ
+            #AgACAgIAAxkBAAIFYGSRpx_8Cc6SQG_F4rb4ozBnt7lcAALSzTEbVD-QSG3iBwxKZzmJAQADAgADeAADLwQ
+            #AgACAgIAAxkBAAIFYmSRpyU7D0pR0Zq4YxhL5rjrj7i-AALSzTEbVD-QSG3iBwxKZzmJAQADAgADeAADLwQ
+
+
+
+            bot.reply_to(update.message, f"Good image: {fileID}")
+
+        case _:
+            bot.reply_to(update.message, f"I can't process this")
+
+
+
     
     return {
         'statusCode': 200,
