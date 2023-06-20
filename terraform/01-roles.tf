@@ -34,6 +34,7 @@ resource "aws_iam_policy" "custom-policy" {
           "secretsmanager:GetSecretValue",
           "lambda:InvokeFunction",
           "lambda:invokeFunctionUrl",
+          "rekognition:*",
         ]
         Effect   = "Allow"
         Resource = "*"

@@ -76,36 +76,30 @@ def lambda_handler(event, context):
         case 'text':
             bot.reply_to(update.message, f"Send an image instead of this text: {update.message.text}")
         case 'photo':
-            
+            images_bucket_name = os.environ.get('IMAGES_BUCKET_NAME')
 
             fileID = update.message.photo[-1].file_id
             logger.debug(f"APP:: fileID: {fileID}")
             file_info = bot.get_file(fileID)
             logger.debug(f"APP:: file_info: {file_info}")
             downloaded_file = bot.download_file(file_info.file_path)
-            logger.debug(f"APP:: image object type : {type(downloaded_file)}")
-
 
             s3_client = boto3.client('s3')
-            s3_client.upload_fileobj(BytesIO(downloaded_file), os.environ.get('IMAGES_BUCKET_NAME'), fileID) 
+            try:
+                response = s3_client.upload_fileobj(BytesIO(downloaded_file), images_bucket_name, fileID)
+                logger.debug(f"APP:: s3 upload result : {response}")
+            except ClientError as e:
+                logger.error(e)
 
-            # s3_client = boto3.client('s3')
-            # try:
-            #     response = s3_client.upload_fileobj(downloaded_file, "telegram-bot-serverless-044694793931", "777.png")
-            # except ClientError as e:
-            #     logging.error(e)
+            rekognition_client = boto3.client('rekognition')
 
-            #AgACAgIAAxkBAAIFXGSRpuBC3YCvLedStrazkrtFySIBAAI7zjEbVD-QSGAhvPqPsCQGAQADAgADeAADLwQ
-            #AgACAgIAAxkBAAIFXmSRpvE9o5Z7vP8ThBl_LbYy3jbbAAI8zjEbVD-QSHaHIKNsHybiAQADAgADeQADLwQ
-            #AgACAgIAAxkBAAIFYGSRpx_8Cc6SQG_F4rb4ozBnt7lcAALSzTEbVD-QSG3iBwxKZzmJAQADAgADeAADLwQ
-            #AgACAgIAAxkBAAIFYmSRpyU7D0pR0Zq4YxhL5rjrj7i-AALSzTEbVD-QSG3iBwxKZzmJAQADAgADeAADLwQ
+            response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
 
-
-
-            bot.reply_to(update.message, f"Good image: {fileID}")
+            logger.debug(f"APP:: rekognition result : {response}")
+            bot.reply_to(update.message, f"Good image: s3://{images_bucket_name}/{fileID}")
 
         case _:
-            bot.reply_to(update.message, f"I can't process this")
+            bot.reply_to(update.message, f"I can't process this {update.message.content_type}")
 
 
 

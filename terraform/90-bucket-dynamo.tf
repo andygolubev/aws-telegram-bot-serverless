@@ -21,7 +21,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "images-bucket-name-lifecycle_c
     status = "Enabled"
 
     expiration {
-      days = 90
+      days = 30
     }
   }
 }
