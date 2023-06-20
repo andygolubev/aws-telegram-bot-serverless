@@ -4,7 +4,7 @@ resource "null_resource" "pip-install" {
       mkdir -p /tmp/packages/python/
       python3 -m venv /tmp/temp-venv
       source /tmp/temp-venv/bin/activate
-      pip3 install -r ../lambda/bot-function/requirements.txt -t /tmp/packages/python/
+      pip3 install -r ../lambda/bot-dependencies-layer/requirements.txt -t /tmp/packages/python/
       EOF
   }
 }

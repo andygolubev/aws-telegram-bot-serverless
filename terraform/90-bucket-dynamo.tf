@@ -1,21 +1,30 @@
-### 
-###        This section is used only for provision to the sandbox in us-east-1
-###        For the prod environment this bucket and DynamoDB table are maid manually
-###
 
-# # S3 bucket (encrypted) for Terraform STATE file
+data "aws_caller_identity" "current-account" {}
 
-# resource "aws_s3_bucket" "terraform-state" {
-#     bucket = "devops-directive-tf-state-123-${var.aws_region}"
-#     force_destroy = true
+resource "aws_s3_bucket" "images-bucket" {
+    bucket = "telegram-bot-serverless-${data.aws_caller_identity.current-account.account_id}"
+    force_destroy = true
 
-#     tags = {
-#         Name = "terraform state s3"
-#         CreatedBy= "Terraform"
-#         Region = var.aws_region
-#     }
+    tags = {
+        Name = "Images bucket"
+        CreatedBy= "Terraform"
+        Region = var.aws_region
+    }
 
-# }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "images-bucket-name-lifecycle_configuration" {
+  bucket = aws_s3_bucket.images-bucket.id
+
+  rule {
+    id = "clear"
+    status = "Enabled"
+
+        expiration {
+      days = 90
+    }
+  }
+}
 
 # resource "aws_s3_bucket_versioning" "bucket-versioning" {
 #     bucket = aws_s3_bucket.terraform-state.id
