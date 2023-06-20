@@ -5,21 +5,19 @@ import os
 from botocore.exceptions import ClientError
 
 import logging
-
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(os.environ.get('LOGGING_LEVEL'))
 
-region = os.environ.get('AWS_CLOUD_REGION')
 
 def get_bot_token_from_secret_manager():
 
-    secret_name = "Bot_token"
+    secret_name = os.environ.get('TOKEN_VAR_NAME')
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
-        service_name='secretsmanager',
-        region_name=region
+        service_name = 'secretsmanager',
+        region_name = os.environ.get('AWS_CLOUD_REGION')
     )
 
     try:
@@ -64,14 +62,10 @@ def echo_message(message):
 
 
 def lambda_handler(event, context):
-    print("event:")
-    logger.debug("event:")
-    print(event)
-    print("event body:")
-    print(event['body'])
-    print("context:")
-    print(context)
-    
+    logger.debug(f"APP:: event: {event}")
+    logger.debug(f"APP:: event body: {event['body']}")
+    logger.debug(f"APP:: context: {context}")
+
 
     # return {
     #     'statusCode': 200,

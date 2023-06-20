@@ -4,18 +4,21 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 
-region = os.environ.get('AWS_CLOUD_REGION')
+import logging
+logger = logging.getLogger()
+logger.setLevel(os.environ.get('LOGGING_LEVEL'))
+
+
 
 def get_bot_token_from_secret_manager():
 
     secret_name = os.environ.get('TOKEN_VAR_NAME')
     
-
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
-        service_name='secretsmanager',
-        region_name=region
+        service_name = 'secretsmanager',
+        region_name = os.environ.get('AWS_CLOUD_REGION')
     )
 
     try:
@@ -23,8 +26,6 @@ def get_bot_token_from_secret_manager():
             SecretId=secret_name
         )
     except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
     # Decrypts secret using the associated KMS key.
@@ -33,25 +34,22 @@ def get_bot_token_from_secret_manager():
     return bot_token
 
 
-
-bot = telebot.TeleBot(get_bot_token_from_secret_manager())
-
-    
 def lambda_handler(event, context):
+
+    logger.debug(f"APP:: event: {event}")
+    logger.debug(f"APP:: context: {context}")
+
+    bot = telebot.TeleBot(get_bot_token_from_secret_manager())
     
     callback_url = os.environ.get('CALLBACK_URL')
     webhook_info = bot.get_webhook_info()
-    print(webhook_info)
+    logger.debug(f"APP:: webhook info before setting: {webhook_info}")
 
-
-    # Set webhook
+    logger.debug(f"APP:: set webhook for url: {callback_url}")
     bot.set_webhook(url=callback_url)
 
-        
-    print("AFTER SET")
-    callback_url = os.environ.get('CALLBACK_URL')
     webhook_info = bot.get_webhook_info()
-    print(webhook_info)
+    logger.info(f"APP:: webhook info after setting: {webhook_info}")
     
     return {
         'statusCode': 200,

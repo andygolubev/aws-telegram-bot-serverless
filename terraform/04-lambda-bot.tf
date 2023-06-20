@@ -24,7 +24,8 @@ resource "aws_lambda_function" "bot-lambda" {
   environment {
     variables = {
       AWS_CLOUD_REGION = var.aws_region
-      TOKEN_VAR_NAME = aws_secretsmanager_secret.bot-token-secret.name
+      TOKEN_VAR_NAME   = aws_secretsmanager_secret.bot-token-secret.name
+      LOGGING_LEVEL    = var.logging_level
     }
   }
 
@@ -34,4 +35,9 @@ resource "aws_lambda_function" "bot-lambda" {
 resource "aws_lambda_function_url" "bot-lambda-invocation-url" {
   function_name      = aws_lambda_function.bot-lambda.function_name
   authorization_type = "NONE"
+}
+
+resource "aws_cloudwatch_log_group" "lambda-log-bot" {
+  name              = "/aws/lambda/${aws_lambda_function.bot-lambda.function_name}"
+  retention_in_days = var.log-group-retention-period
 }
