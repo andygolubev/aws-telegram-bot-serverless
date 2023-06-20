@@ -8,7 +8,8 @@ region = os.environ.get('AWS_CLOUD_REGION')
 
 def get_bot_token_from_secret_manager():
 
-    secret_name = "Bot_token"
+    secret_name = os.environ.get('TOKEN_VAR_NAME')
+    
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
