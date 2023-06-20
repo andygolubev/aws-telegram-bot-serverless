@@ -14,8 +14,8 @@ resource "aws_lambda_function" "bot-lambda" {
 
   source_code_hash = data.archive_file.lambda-bot-zip-file.output_base64sha256
 
-  runtime = "python3.10"
-  timeout = 30
+  runtime     = "python3.10"
+  timeout     = 30
   memory_size = 256
 
   tracing_config {

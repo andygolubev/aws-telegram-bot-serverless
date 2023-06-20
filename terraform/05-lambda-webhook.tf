@@ -14,8 +14,8 @@ resource "aws_lambda_function" "webhook-lambda" {
 
   source_code_hash = data.archive_file.webhook-function-zip-file.output_base64sha256
 
-  runtime = "python3.10"
-  timeout = 30
+  runtime     = "python3.10"
+  timeout     = 30
   memory_size = 256
 
   tracing_config {
@@ -37,7 +37,7 @@ resource "aws_lambda_function" "webhook-lambda" {
 
 data "aws_lambda_invocation" "webhook-lambda-invocation" {
   function_name = aws_lambda_function.webhook-lambda.function_name
-  input = "{}"
+  input         = "{}"
 
   depends_on = [aws_lambda_function.webhook-lambda, aws_cloudwatch_log_group.lambda-log-webhook]
 }
