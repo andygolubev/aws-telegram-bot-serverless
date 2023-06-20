@@ -16,6 +16,7 @@ resource "aws_lambda_function" "bot-lambda" {
 
   runtime = "python3.10"
   timeout = 30
+  memory_size = 256
 
   tracing_config {
     mode = "Active"

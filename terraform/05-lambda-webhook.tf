@@ -37,14 +37,7 @@ resource "aws_lambda_function" "webhook-lambda" {
 
 data "aws_lambda_invocation" "webhook-lambda-invocation" {
   function_name = aws_lambda_function.webhook-lambda.function_name
-
   input = "{}"
-  #   input = <<JSON
-  # {
-  #   "key1": "value1",
-  #   "key2": "value2"
-  # }
-  # JSON
 
   depends_on = [aws_lambda_function.webhook-lambda, aws_cloudwatch_log_group.lambda-log-webhook]
 }

@@ -66,16 +66,9 @@ def lambda_handler(event, context):
     logger.debug(f"APP:: event body: {event['body']}")
     logger.debug(f"APP:: context: {context}")
 
-
-    # return {
-    #     'statusCode': 200,
-    #     'body': json.dumps('all good')
-    # }
-
-
     update = telebot.types.Update.de_json(event['body'])
-    print("This is bot update structure:")
-    print(update)
+    logger.debug(f"APP:: This is bot update structure: {update}")
+    
     bot.reply_to(update.message, f"Answer to: {update.message.text}")
     # bot.process_new_updates([update])
     
