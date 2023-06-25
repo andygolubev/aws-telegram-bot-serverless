@@ -156,7 +156,7 @@ def lambda_handler(event, context):
                         },
                         UpdateExpression='SET Recognitions = :val1',
                         ExpressionAttributeValues={
-                            ':val1': 1
+                            ':val1': int(items[0]['Recognitions']) + 1
                         }
                     )
 
