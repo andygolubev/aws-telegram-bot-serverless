@@ -84,40 +84,57 @@ def lambda_handler(event, context):
             logger.debug(f"APP:: file_info: {file_info}")
             downloaded_file = bot.download_file(file_info.file_path)
 
+            #
+            #   Store the image to the S3
+            #
+
             s3_client = boto3.client('s3')
             try:
                 response = s3_client.upload_fileobj(BytesIO(downloaded_file), images_bucket_name, fileID)
                 logger.debug(f"APP:: s3 upload result : {response}")
+
+                bot.reply_to(update.message, f"Image has stored: s3://{images_bucket_name}/{fileID}")
             except ClientError as e:
                 logger.error(e)
+                bot.reply_to(update.message, f"ERROR: Can't store the image")
+
+            
+            
+
+            #
+            #   Detect Label on the stored image
+            #
 
             rekognition_client = boto3.client('rekognition')
+            try:
+                response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
 
-            response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
-
-            logger.debug(f"APP:: rekognition result : {response}")
+                logger.debug(f"APP:: rekognition result : {response}")
 
 
 
-            json_data_dump = json.dumps(response)
-            json_data = json.loads(json_data_dump)
-            
-            result = []
-            for label in json_data["Labels"]:
-                name = label["Name"]
-                first_category = label["Categories"][0]["Name"]
-                confidence = label["Confidence"]
-                result.append(f"Label: {name}")
-                result.append(f"  Category: {first_category}")
-                result.append(f"  Confidence: {confidence}")
+                json_data_dump = json.dumps(response)
+                json_data = json.loads(json_data_dump)
+                
+                result = []
+                for label in json_data["Labels"]:
+                    name = label["Name"]
+                    first_category = label["Categories"][0]["Name"]
+                    confidence = label["Confidence"]
+                    result.append(f"Label: {name}")
+                    result.append(f"  Category: {first_category}")
+                    result.append(f"  Confidence: {confidence}")
 
-            delimiter = '\n'
+                delimiter = '\n'
 
-            result_string = delimiter.join(result)
-            logger.debug(f"APP:: LABELS string: {result_string}")
+                result_string = delimiter.join(result)
+                logger.debug(f"APP:: LABELS string: {result_string}")
 
-            bot.reply_to(update.message, f"Good image: s3://{images_bucket_name}/{fileID}")
-            bot.reply_to(update.message, f"{result_string}")
+                bot.reply_to(update.message, f"{result_string}")
+                    
+            except ClientError as e:
+                logger.error(e)
+                bot.reply_to(update.message, f"ERROR: Can't detect labels")
 
         case _:
             bot.reply_to(update.message, f"I can't process this {update.message.content_type}")
