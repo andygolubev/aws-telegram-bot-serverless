@@ -35,9 +35,11 @@ def get_bot_token_from_secret_manager():
 
 
 
-bot = telebot.TeleBot(get_bot_token_from_secret_manager())
+
     
 def lambda_handler(event, context):
+    bot = telebot.TeleBot(get_bot_token_from_secret_manager())
+
     logger.debug(f"APP:: event: {event}")
     logger.debug(f"APP:: event body: {event['body']}")
     logger.debug(f"APP:: context: {context}")
@@ -46,7 +48,7 @@ def lambda_handler(event, context):
 
     logger.debug(f"APP:: This is bot update structure: {update}")
     logger.debug(f"APP:: Message type: {update.message.content_type}")
-    
+
     if update.message == None: return { 'statusCode': 200 }
         
     match update.message.content_type:
