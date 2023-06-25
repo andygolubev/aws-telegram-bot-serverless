@@ -46,7 +46,9 @@ def lambda_handler(event, context):
 
     logger.debug(f"APP:: This is bot update structure: {update}")
     logger.debug(f"APP:: Message type: {update.message.content_type}")
-
+    
+    if update.message == None: return { 'statusCode': 200 }
+        
     match update.message.content_type:
         case 'text':
             if update.message.text == '/start':
@@ -54,7 +56,7 @@ def lambda_handler(event, context):
             elif update.message.text == '/stat':
                 bot.reply_to(update.message, f"Statistics")
             else:
-                bot.reply_to(update.message, f"Send an image to recognize of type /stat to show statistics")
+                bot.reply_to(update.message, f"Send an image to recognize or type /stat to show statistics")
         case 'photo':
             images_bucket_name = os.environ.get('IMAGES_BUCKET_NAME')
 
