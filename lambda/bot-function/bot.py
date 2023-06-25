@@ -65,7 +65,6 @@ def lambda_handler(event, context):
                     response = table.query(
                         KeyConditionExpression=Key('UserID').eq(update.message.from_user.id)
                     )
-                    logger.debug(f"APP:: STATTTT")
                     if len(response['Items']) > 0:
                         bot.reply_to(update.message, f"You have recognized {response['Items'][0]['Recognitions']} images")
                     else:
@@ -147,7 +146,6 @@ def lambda_handler(event, context):
                 )
                 items = response['Items']
                 logger.debug(f"APP:: Items from Query: {items}")
-                logger.debug(f"APP:: PPPPP")
 
                 if response['Count'] == 0:
                     table.update_item(
