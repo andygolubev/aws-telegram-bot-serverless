@@ -54,7 +54,7 @@ def lambda_handler(event, context):
     match update.message.content_type:
         case 'text':
             if update.message.text == '/start':
-                bot.reply_to(update.message, f"Welcome! Send an image for recognition")
+                bot.reply_to(update.message, f"Welcome! Submit an image for recognition")
             elif update.message.text == '/stat':
                 dynamodb_client = boto3.resource('dynamodb')         
                 try:
@@ -68,7 +68,7 @@ def lambda_handler(event, context):
                     if len(response['Items']) > 0:
                         bot.reply_to(update.message, f"You have recognized {response['Items'][0]['Recognitions']} images")
                     else:
-                        bot.reply_to(update.message, f"You didn't recognize any images")
+                        bot.reply_to(update.message, f"You haven't recognized any of the images yet")
                 except ClientError as e:
                     logger.error(e)     
             else:
