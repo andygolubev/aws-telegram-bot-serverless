@@ -126,7 +126,7 @@ def lambda_handler(event, context):
 
 
 
-            dynamodb_client = boto3.client('dynamodb')
+            dynamodb_client = boto3.resource('dynamodb')  
             
             try:
                 table = dynamodb_client.Table('aws-telegram-bot-statistics')
@@ -141,7 +141,6 @@ def lambda_handler(event, context):
 
             except ClientError as e:
                 logger.error(e)
-                raise
 
 
         case _:
