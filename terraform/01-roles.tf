@@ -34,7 +34,6 @@ resource "aws_iam_policy" "custom-policy" {
           "secretsmanager:GetSecretValue",
           "lambda:InvokeFunction",
           "lambda:invokeFunctionUrl",
-          "rekognition:*",
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -54,7 +53,8 @@ resource "aws_iam_role_policy_attachment" "policy-attachment" {
   for_each = toset([
     "arn:aws:iam::aws:policy/AWSLambdaExecute",
     "arn:aws:iam::aws:policy/service-role/AmazonS3ObjectLambdaExecutionRolePolicy",
-    "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+    "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess",
+    "arn:aws:iam::aws:policy/AmazonRekognitionReadOnlyAccess"
   ])
 
   role       = aws_iam_role.lambdaRole.name

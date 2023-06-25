@@ -2,7 +2,7 @@
 data "aws_caller_identity" "current-account" {}
 
 resource "aws_s3_bucket" "images-bucket" {
-  bucket        = "telegram-bot-serverless1-${data.aws_caller_identity.current-account.account_id}"
+  bucket        = "telegram-bot-serverless-${data.aws_caller_identity.current-account.account_id}"
   force_destroy = true
 
   tags = {
