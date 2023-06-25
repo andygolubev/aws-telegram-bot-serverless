@@ -1,6 +1,6 @@
 # DynamoDB table for a bot statistics
 
-resource "aws_dynamodb_table" "terraform_locks" {
+resource "aws_dynamodb_table" "aws-telegram-bot-statistics" {
   name         = "aws-telegram-bot-statistics"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "UserID"
