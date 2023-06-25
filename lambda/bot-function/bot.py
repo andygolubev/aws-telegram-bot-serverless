@@ -92,11 +92,9 @@ def lambda_handler(event, context):
                 response = s3_client.upload_fileobj(BytesIO(downloaded_file), images_bucket_name, fileID)
                 logger.debug(f"APP:: s3 upload result : {response}")
 
-                bot.reply_to(update.message, f"Image has stored: s3://{images_bucket_name}/{fileID}")
+                logger.debug(f"APP:: Image has stored: s3://{images_bucket_name}/{fileID}")
             except ClientError as e:
                 logger.error(e)
-                bot.reply_to(update.message, f"ERROR: Can't store the image")
-
 
             #
             #   Detect Label on the stored image
@@ -131,7 +129,7 @@ def lambda_handler(event, context):
                     
             except ClientError as e:
                 logger.error(e)
-                bot.reply_to(update.message, f"ERROR: Can't detect labels")
+                bot.reply_to(update.message, f"ERROR: Can't recognize the image")
 
             #
             #  Save statistics
