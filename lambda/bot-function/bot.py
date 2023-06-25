@@ -38,26 +38,26 @@ def get_bot_token_from_secret_manager():
 bot = telebot.TeleBot(get_bot_token_from_secret_manager())
 
 
-# Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
-def send_welcome(message):
-    print("start")
-    print(message)
-    print("end")
-    bot.reply_to(message, "Hi!!!!!!!!!!!!")
-    #bot.stop_bot()
+# # Handle '/start' and '/help'
+# @bot.message_handler(commands=['help', 'start'])
+# def send_welcome(message):
+#     print("start")
+#     print(message)
+#     print("end")
+#     bot.reply_to(message, "Hi!!!!!!!!!!!!")
+#     #bot.stop_bot()
     
 
 
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_message(message):
-    print("start bot message handler")
-    print(message)
-    print("end bot message handler")
-    bot.reply_to(message, f"Answer to: {message.text}")
-    #bot.send_message(chat_id=message.chat.id,  text="-----")
-    # bot.stop_polling()
+# # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
+# @bot.message_handler(func=lambda message: True, content_types=['text'])
+# def echo_message(message):
+#     print("start bot message handler")
+#     print(message)
+#     print("end bot message handler")
+#     bot.reply_to(message, f"Answer to: {message.text}")
+#     #bot.send_message(chat_id=message.chat.id,  text="-----")
+#     # bot.stop_polling()
 
     
 
@@ -74,7 +74,10 @@ def lambda_handler(event, context):
 
     match update.message.content_type:
         case 'text':
-            bot.reply_to(update.message, f"Send an image instead of this text: {update.message.text}")
+            if update.message.text == '/start':
+                bot.reply_to(update.message, f"Welcome! Send an image")
+            else:
+                bot.reply_to(update.message, f"Send an image instead of this text: {update.message.text}")
         case 'photo':
             images_bucket_name = os.environ.get('IMAGES_BUCKET_NAME')
 
