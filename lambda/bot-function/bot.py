@@ -103,7 +103,7 @@ def lambda_handler(event, context):
 
             rekognition_client = boto3.client('rekognition')
             try:
-                response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
+                response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=5)
 
                 logger.debug(f"APP:: rekognition result : {response}")
 
