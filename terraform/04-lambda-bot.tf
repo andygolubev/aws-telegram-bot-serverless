@@ -34,10 +34,11 @@ resource "aws_lambda_function" "bot-lambda" {
   depends_on = [data.archive_file.lambda-bot-zip-file, ]
 }
 
-resource "aws_lambda_function_url" "bot-lambda-invocation-url" {
-  function_name      = aws_lambda_function.bot-lambda.function_name
-  authorization_type = "NONE"
-}
+# FOR TEST
+# resource "aws_lambda_function_url" "bot-lambda-invocation-url" {
+#   function_name      = aws_lambda_function.bot-lambda.function_name
+#   authorization_type = "NONE"
+# }
 
 resource "aws_cloudwatch_log_group" "lambda-log-bot" {
   name              = "/aws/lambda/${aws_lambda_function.bot-lambda.function_name}"
