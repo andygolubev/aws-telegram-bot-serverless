@@ -96,10 +96,22 @@ def lambda_handler(event, context):
             response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
 
             logger.debug(f"APP:: rekognition result : {response}")
+
+
+            json_data = json.loads(response)
+            for label in json_data["Labels"]:
+                name = label["Name"]
+                first_category = label["Categories"][0]["Name"]
+                confidence = label["Confidence"]
+                
+                logger.debug(f"Name: {name}")
+                logger.debug(f"First Category: {first_category}")
+                logger.debug(f"Confidence: {confidence}")
+
             bot.reply_to(update.message, f"Good image: s3://{images_bucket_name}/{fileID}")
 
         case _:
-            bot.reply_to(update.message, f"I can't process this {update.message.content_type}")
+            bot.reply_to(update.message, f"I can't process \n this {update.message.content_type}")
 
 
 
