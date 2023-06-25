@@ -56,9 +56,25 @@ def lambda_handler(event, context):
             if update.message.text == '/start':
                 bot.reply_to(update.message, f"Welcome! Send an image for recognition")
             elif update.message.text == '/stat':
-                bot.reply_to(update.message, f"Statistics")
+                dynamodb_client = boto3.resource('dynamodb')         
+                try:
+                    table = dynamodb_client.Table('aws-telegram-bot-statistics')
+                    logger.debug(f"APP:: DynamoDB tabel: {table}")
+                    logger.debug(f"APP:: TelegramUserID: {update.message.from_user.id}")
+                    response = table.query(
+                        KeyConditionExpression=Key('UserID').eq(update.message.from_user.id)
+                    )
+                    logger.debug(f"APP:: STATTTT")
+                    recognized_images = response['Items'][0]['Recognitions']
+                    if recognized_images:
+                        bot.reply_to(update.message, f"You have recognized {recognized_images} images")
+                    else:
+                        bot.reply_to(update.message, f"You didn't recognize any images")
+                except ClientError as e:
+                    logger.error(e)     
             else:
                 bot.reply_to(update.message, f"Send an image to recognize or type /stat to show statistics")
+
         case 'photo':
             images_bucket_name = os.environ.get('IMAGES_BUCKET_NAME')
 
@@ -82,8 +98,6 @@ def lambda_handler(event, context):
                 logger.error(e)
                 bot.reply_to(update.message, f"ERROR: Can't store the image")
 
-            
-            
 
             #
             #   Detect Label on the stored image
@@ -124,8 +138,6 @@ def lambda_handler(event, context):
             #  Save statistics
             #
 
-
-
             dynamodb_client = boto3.resource('dynamodb')  
             
             try:
@@ -159,7 +171,6 @@ def lambda_handler(event, context):
                             ':val1': int(items[0]['Recognitions']) + 1
                         }
                     )
-
             except ClientError as e:
                 logger.error(e)
 
@@ -168,8 +179,6 @@ def lambda_handler(event, context):
             bot.reply_to(update.message, f"I can't process this {update.message.content_type}")
 
 
-
-    
     return {
         'statusCode': 200,
         'body': json.dumps('Processed message id: ' + str(update.message.message_id))

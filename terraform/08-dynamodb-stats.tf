@@ -8,6 +8,8 @@ resource "aws_dynamodb_table" "aws-telegram-bot-statistics" {
     name = "UserID"
     type = "N"
   }
+
+  # -------- This Attribute stores the number of recognitions ---------
   # attribute {
   #   name = "Recognitions"
   #   type = "N"
