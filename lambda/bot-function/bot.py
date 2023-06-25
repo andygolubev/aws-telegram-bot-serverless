@@ -126,7 +126,7 @@ def lambda_handler(event, context):
             try:
                 table = dynamodb_client.Table('aws-telegram-bot-statistics')
                 response = table.query(
-                    KeyConditionExpression=Key('UserID').eq(update.message.json.from.id)
+                    KeyConditionExpression=Key('UserID').eq(update.message['json']['from']['id'])
                 )
                 items = response['Items']
                 logger.debug(items)
