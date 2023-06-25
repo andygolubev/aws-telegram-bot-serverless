@@ -93,7 +93,7 @@ def lambda_handler(event, context):
 
             rekognition_client = boto3.client('rekognition')
 
-            response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=5)
+            response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':images_bucket_name,'Name':fileID}}, MaxLabels=10)
 
             logger.debug(f"APP:: rekognition result : {response}")
 
@@ -117,7 +117,7 @@ def lambda_handler(event, context):
             logger.debug(f"APP:: LABELS string: {result_string}")
 
             bot.reply_to(update.message, f"Good image: s3://{images_bucket_name}/{fileID}")
-            bot.reply_to(update.message, f"Recognized Labels: \\n{result_string}")
+            bot.reply_to(update.message, f"{result_string}")
 
         case _:
             bot.reply_to(update.message, f"I can't process this {update.message.content_type}")
