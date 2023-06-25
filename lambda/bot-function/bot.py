@@ -98,7 +98,7 @@ def lambda_handler(event, context):
             logger.debug(f"APP:: rekognition result : {response}")
 
 
-            json_data = json.loads(response)
+            json_data = json.dumps(response)
             for label in json_data["Labels"]:
                 name = label["Name"]
                 first_category = label["Categories"][0]["Name"]
