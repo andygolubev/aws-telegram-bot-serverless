@@ -130,14 +130,35 @@ def lambda_handler(event, context):
             
             try:
                 table = dynamodb_client.Table('aws-telegram-bot-statistics')
-                logger.debug(table)
-                logger.debug("&&&BBB")
-                logger.debug(update.message.from_user.id)
+                logger.debug(f"APP:: DynamoDB tabel: {table}")
+                logger.debug(f"APP:: &&&BBB")
+                logger.debug(f"APP:: TelegramUserID: {update.message.from_user.id}")
                 response = table.query(
                     KeyConditionExpression=Key('UserID').eq(update.message.from_user.id)
                 )
                 items = response['Items']
-                logger.debug(items)
+                logger.debug(f"APP:: Items from Query: {items}")
+
+                if response['Count'] == 0:
+                    table.update_item(
+                        Key={
+                            'UserID': update.message.from_user.id
+                        },
+                        UpdateExpression='SET Recognitions = :val1',
+                        ExpressionAttributeValues={
+                            ':val1': 1
+                        }
+                    )
+                else:
+                    table.update_item(
+                        Key={
+                            'UserID': update.message.from_user.id
+                        },
+                        UpdateExpression='SET Recognitions = :val1',
+                        ExpressionAttributeValues={
+                            ':val1': 1
+                        }
+                    )
 
             except ClientError as e:
                 logger.error(e)
