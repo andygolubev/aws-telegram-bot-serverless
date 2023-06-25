@@ -24,7 +24,7 @@ resource "aws_lambda_function" "webhook-lambda" {
 
   environment {
     variables = {
-      CALLBACK_URL = aws_apigatewayv2_stage.dev.invoke_url
+      CALLBACK_URL = aws_apigatewayv2_stage.prod.invoke_url
       #CALLBACK_URL     = aws_lambda_function_url.bot-lambda-invocation-url.function_url
       TOKEN_VAR_NAME   = aws_secretsmanager_secret.bot-token-secret.name
       AWS_CLOUD_REGION = var.aws_region
