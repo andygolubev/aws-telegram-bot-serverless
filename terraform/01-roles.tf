@@ -35,6 +35,7 @@ resource "aws_iam_policy" "custom-policy" {
           "lambda:InvokeFunction",
           "lambda:invokeFunctionUrl",
           "dynamodb:Query",
+          "dynamodb:UpdateItem",
         ]
         Effect   = "Allow"
         Resource = "*"

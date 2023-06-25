@@ -131,13 +131,13 @@ def lambda_handler(event, context):
             try:
                 table = dynamodb_client.Table('aws-telegram-bot-statistics')
                 logger.debug(f"APP:: DynamoDB tabel: {table}")
-                logger.debug(f"APP:: &&&BBB")
                 logger.debug(f"APP:: TelegramUserID: {update.message.from_user.id}")
                 response = table.query(
                     KeyConditionExpression=Key('UserID').eq(update.message.from_user.id)
                 )
                 items = response['Items']
                 logger.debug(f"APP:: Items from Query: {items}")
+                logger.debug(f"APP:: PPPPP")
 
                 if response['Count'] == 0:
                     table.update_item(
