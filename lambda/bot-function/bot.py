@@ -126,9 +126,13 @@ def lambda_handler(event, context):
 
 
 
-            dynamodb_client = boto3.resource('dynamodb')
+            dynamodb_client = boto3.client('dynamodb')
+            
             try:
                 table = dynamodb_client.Table('aws-telegram-bot-statistics')
+                logger.debug(table)
+                logger.debug("&&&&&&")
+                logger.debug(update.message['json']['from']['id'])
                 response = table.query(
                     KeyConditionExpression=Key('UserID').eq(update.message['json']['from']['id'])
                 )
