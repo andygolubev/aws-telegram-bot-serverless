@@ -4,6 +4,7 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 from io import BytesIO
+from boto3.dynamodb.conditions import Key
 
 import logging
 logger = logging.getLogger()
