@@ -65,9 +65,8 @@ def lambda_handler(event, context):
                         KeyConditionExpression=Key('UserID').eq(update.message.from_user.id)
                     )
                     logger.debug(f"APP:: STATTTT")
-                    recognized_images = response['Items'][0]['Recognitions']
-                    if recognized_images:
-                        bot.reply_to(update.message, f"You have recognized {recognized_images} images")
+                    if len(response['Items']) > 0:
+                        bot.reply_to(update.message, f"You have recognized {response['Items'][0]['Recognitions']} images")
                     else:
                         bot.reply_to(update.message, f"You didn't recognize any images")
                 except ClientError as e:
