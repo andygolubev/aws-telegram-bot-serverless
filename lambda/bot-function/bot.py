@@ -47,9 +47,10 @@ def lambda_handler(event, context):
     update = telebot.types.Update.de_json(event['body'])
 
     logger.debug(f"APP:: This is bot update structure: {update}")
-    logger.debug(f"APP:: Message type: {update.message.content_type}")
+    
 
     if update.message == None: return { 'statusCode': 200 }
+    logger.debug(f"APP:: Message type: {update.message.content_type}")
         
     match update.message.content_type:
         case 'text':

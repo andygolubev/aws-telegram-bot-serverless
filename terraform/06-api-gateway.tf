@@ -3,7 +3,7 @@ resource "aws_apigatewayv2_api" "call-back-api" {
   protocol_type = "HTTP"
 }
 
-resource "aws_apigatewayv2_stage" "dev" {
+resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.call-back-api.id
 
   name        = "prod"
@@ -31,7 +31,7 @@ resource "aws_apigatewayv2_stage" "dev" {
 resource "aws_cloudwatch_log_group" "call-back-api-gw" {
   name = "/aws/api-gw/${aws_apigatewayv2_api.call-back-api.name}"
 
-  retention_in_days = 14
+  retention_in_days = var.log-group-retention-period
 }
 
 resource "aws_apigatewayv2_integration" "api-gw-to-lambda" {
@@ -46,7 +46,7 @@ resource "aws_apigatewayv2_integration" "api-gw-to-lambda" {
 resource "aws_apigatewayv2_route" "post-callback-route" {
   api_id = aws_apigatewayv2_api.call-back-api.id
 
-  route_key = "POST /"
+  route_key = "$default"
   target    = "integrations/${aws_apigatewayv2_integration.api-gw-to-lambda.id}"
 }
 
