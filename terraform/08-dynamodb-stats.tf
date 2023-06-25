@@ -8,10 +8,10 @@ resource "aws_dynamodb_table" "terraform_locks" {
     name = "UserID"
     type = "S"
   }
-  attribute {
-    name = "Recognitions"
-    type = "N"
-  }
+  # attribute {
+  #   name = "Recognitions"
+  #   type = "N"
+  # }
 
   tags = {
     Name      = "bot statistics dynamo table"
