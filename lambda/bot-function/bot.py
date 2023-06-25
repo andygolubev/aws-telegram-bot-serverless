@@ -98,17 +98,28 @@ def lambda_handler(event, context):
             logger.debug(f"APP:: rekognition result : {response}")
 
 
-            json_data = json.dumps(response)
+
+            json_data_dump = json.dumps(response)
+            json_data = json.loads(json_data_dump)
+            
+            result_string = ''
             for label in json_data["Labels"]:
                 name = label["Name"]
                 first_category = label["Categories"][0]["Name"]
                 confidence = label["Confidence"]
                 
-                logger.debug(f"Name: {name}")
-                logger.debug(f"First Category: {first_category}")
-                logger.debug(f"Confidence: {confidence}")
+                result = []
+                result.append(f"Label: {name}")
+                result.append(f"  Category: {first_category}")
+                result.append(f"  Confidence: {confidence}")
+
+                delimiter = '\n'
+
+                result_string = delimiter.join(result)
+                logger.debug(f"APP:: LABELS string : {result_string}")
 
             bot.reply_to(update.message, f"Good image: s3://{images_bucket_name}/{fileID}")
+            bot.reply_to(update.message, f"result_string")
 
         case _:
             bot.reply_to(update.message, f"I can't process \n this {update.message.content_type}")
