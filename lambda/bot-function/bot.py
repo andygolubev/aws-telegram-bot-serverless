@@ -119,6 +119,14 @@ def lambda_handler(event, context):
             #  Save statistics
             #
 
+            dynamodb_client = boto3.resource('dynamodb')
+            table = dynamodb_client.Table('aws-telegram-bot-statistics')
+            response = table.query(
+                KeyConditionExpression=Key('UserID').eq(update.message.content_type)
+            )
+            items = response['Items']
+            logger.debug(items)
+
 
 
         case _:
