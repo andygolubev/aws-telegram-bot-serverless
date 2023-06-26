@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
   
 env:
-  AWS_BUCKET_NAME: "terraform-state-for-telegram-bot-serverless"
-  AWS_DYNAMO_DB_TABLE_NAME: "terraform-state-for-telegram-bot-serverless-locking"
-  AWS_REGION: "us-west-1"
+  AWS_REGION: "us-east-1"
   TERRAFORM_PATH: "./terraform/"
+  BOT_TOKEN : ${{ secrets.BOT_TOKEN }}
+  logging_level: "ERROR"
+  log_group_retention_period: 5
 
 permissions:
   contents: read
@@ -25,9 +26,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # - name: Setup Terraform
-    #   uses: hashicorp/setup-terraform@v1
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -38,14 +36,14 @@ jobs:
     - name: Replace Region in Provider section of Terraform  
       run: sed -i 's/us-east-1/${{ env.AWS_REGION }}/g' $TERRAFORM_PATH/00-provider.tf ; cat $TERRAFORM_PATH/00-provider.tf
 
-    # - name: Terraform Init
-    #   run: terraform -chdir=$TERRAFORM_PATH init
+    - name: Terraform Init
+      run: terraform -chdir=$TERRAFORM_PATH init
 
     - name: Terraform Format
       run: terraform -chdir=$TERRAFORM_PATH fmt -check
 
-    # - name: Terraform Plan
-    #   run: terraform -chdir=$TERRAFORM_PATH plan -input=false
+    - name: Terraform Plan
+      run: terraform -chdir=$TERRAFORM_PATH plan -input=false -var "aws_region=$AWS_REGION" -var="bot_token=$BOT_TOKEN" -var="logging_level=$LOGGING_LEVEL" -var "log_group_retention_period=$LOG_GROUP_RETENTION_PERIOD"
       
-    # - name: Terraform Apply
-    #   run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false
+    - name: Terraform Apply
+      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -var "aws_region=$AWS_REGION" -var="bot_token=$BOT_TOKEN" -var="logging_level=$LOGGING_LEVEL" -var "log_group_retention_period=$LOG_GROUP_RETENTION_PERIOD"

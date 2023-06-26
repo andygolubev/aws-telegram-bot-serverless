@@ -42,5 +42,5 @@ resource "aws_lambda_function" "bot-lambda" {
 
 resource "aws_cloudwatch_log_group" "lambda-log-bot" {
   name              = "/aws/lambda/${aws_lambda_function.bot-lambda.function_name}"
-  retention_in_days = var.log-group-retention-period
+  retention_in_days = var.log_group_retention_period
 }

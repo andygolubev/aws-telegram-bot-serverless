@@ -31,7 +31,7 @@ resource "aws_apigatewayv2_stage" "prod" {
 resource "aws_cloudwatch_log_group" "call-back-api-gw" {
   name = "/aws/api-gw/${aws_apigatewayv2_api.call-back-api.name}"
 
-  retention_in_days = var.log-group-retention-period
+  retention_in_days = var.log_group_retention_period
 }
 
 resource "aws_apigatewayv2_integration" "api-gw-to-lambda" {

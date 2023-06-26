@@ -44,5 +44,5 @@ data "aws_lambda_invocation" "webhook-lambda-invocation" {
 
 resource "aws_cloudwatch_log_group" "lambda-log-webhook" {
   name              = "/aws/lambda/${aws_lambda_function.webhook-lambda.function_name}"
-  retention_in_days = var.log-group-retention-period
+  retention_in_days = var.log_group_retention_period
 }

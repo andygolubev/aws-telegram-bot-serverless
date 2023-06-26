@@ -4,8 +4,10 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_BUCKET_NAME: "terraform-state-for-telegram-bot-serverless"
-  AWS_DYNAMO_DB_TABLE_NAME: "terraform-state-for-telegram-bot-serverless-locking"
+  # must be the same as in the 00-provider.tf
+  AWS_BUCKET_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless" 
+  AWS_DYNAMO_DB_TABLE_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless-locking"
+  # must be the same as in the 2-deploy-bot.yml
   AWS_REGION: "us-east-1"
   
 permissions:
@@ -25,10 +27,10 @@ jobs:
 
     - name: Create a bucket
       run: |
-        aws s3api create-bucket --bucket $AWS_BUCKET_NAME-$AWS_REGION --region $AWS_REGION --no-cli-pager --create-bucket-configuration LocationConstraint=$AWS_REGION
-        aws s3api put-bucket-versioning --bucket $AWS_BUCKET_NAME-$AWS_REGION --versioning-configuration Status=Enabled
-        aws s3api put-bucket-encryption --bucket $AWS_BUCKET_NAME-$AWS_REGION --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
+        aws s3api create-bucket --bucket $AWS_BUCKET_NAME_PREFIX-$AWS_REGION --region $AWS_REGION --no-cli-pager --create-bucket-configuration LocationConstraint=$AWS_REGION
+        aws s3api put-bucket-versioning --bucket $AWS_BUCKET_NAME_PREFIX-$AWS_REGION --versioning-configuration Status=Enabled
+        aws s3api put-bucket-encryption --bucket $AWS_BUCKET_NAME_PREFIX-$AWS_REGION --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
 
     - name: Create a DynamoDB table
       run: |
-        aws dynamodb create-table --table-name $AWS_DYNAMO_DB_TABLE_NAME-$AWS_REGION --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --billing-mode PAY_PER_REQUEST --tags Key=Name,Value="terraform state dynamo table" Key=CreatedBy,Value="AWS CLI" Key=Region,Value=$AWS_REGION 
+        aws dynamodb create-table --table-name $AWS_DYNAMO_DB_TABLE_NAME_PREFIX-$AWS_REGION --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --billing-mode PAY_PER_REQUEST --tags Key=Name,Value="terraform state dynamo table" Key=CreatedBy,Value="AWS CLI" Key=Region,Value=$AWS_REGION 
