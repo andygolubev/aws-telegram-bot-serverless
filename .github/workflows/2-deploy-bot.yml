@@ -36,7 +36,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Replace Region in Provider section of Terraform  
-      run: sed -i 's/us-east-1/eu-central-1/g' 00-provider.tf ; cat 00-provider.tf
+      run: sed -i 's/us-east-1/eu-central-1/g' $TERRAFORM_PATH00-provider.tf ; cat 00-provider.tf
 
     # - name: Terraform Init
     #   run: terraform -chdir=$TERRAFORM_PATH init
