@@ -37,7 +37,7 @@ jobs:
       run: sed -i 's/us-east-1/${{ env.AWS_REGION }}/g' $TERRAFORM_PATH/00-provider.tf ; cat $TERRAFORM_PATH/00-provider.tf
 
     - name: Terraform Init
-      run: terraform -chdir=$TERRAFORM_PATH init
+      run: terraform -chdir=$TERRAFORM_PATH init -var "aws_region=$AWS_REGION" -var="bot_token=$BOT_TOKEN" -var="logging_level=$LOGGING_LEVEL" -var "log_group_retention_period=$LOG_GROUP_RETENTION_PERIOD"
 
     - name: Terraform Format
       run: terraform -chdir=$TERRAFORM_PATH fmt -check
