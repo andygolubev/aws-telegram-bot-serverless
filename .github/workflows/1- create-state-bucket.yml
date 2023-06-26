@@ -8,7 +8,7 @@ env:
   AWS_BUCKET_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless" 
   AWS_DYNAMO_DB_TABLE_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless-locking"
   # must be the same as in the 2-deploy-bot.yml
-  AWS_REGION: "us-east-1"
+  AWS_REGION: "us-west-2"
   
 permissions:
   contents: read
