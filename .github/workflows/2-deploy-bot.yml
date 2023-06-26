@@ -6,9 +6,9 @@ on:
 env:
   AWS_REGION: "us-west-2"
   TERRAFORM_PATH: "./terraform/"
-  BOT_TOKEN : ${{ secrets.BOT_TOKEN }}
-  logging_level: "ERROR"
-  log_group_retention_period: 5
+  # BOT_TOKEN : ${{ secrets.BOT_TOKEN }}
+  LOGGING_LEVEL: "ERROR"
+  LOG_GROUP_RETENTION_PERIOD: 5
 
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
       run: terraform -chdir=$TERRAFORM_PATH fmt -check
 
     - name: Terraform Plan
-      run: terraform -chdir=$TERRAFORM_PATH plan -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ env.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
+      run: terraform -chdir=$TERRAFORM_PATH plan -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
       
     - name: Terraform Apply
-      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ env.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
+      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
