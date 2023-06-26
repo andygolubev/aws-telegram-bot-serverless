@@ -37,4 +37,4 @@ jobs:
       run: terraform -chdir=$TERRAFORM_PATH init
  
     - name: Terraform Apply
-      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -destroy
+      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -destroy -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}"
