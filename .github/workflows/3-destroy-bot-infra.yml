@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   
 env:
-  AWS_REGION: "us-west-2"
+  AWS_REGION: ${{ vars.AWS_REGION }}
   TERRAFORM_PATH: "./terraform/"
 
 permissions:
