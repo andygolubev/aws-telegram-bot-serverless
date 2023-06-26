@@ -5,7 +5,7 @@ on:
 
 env:
   # prefixes must be the same as in the 00-provider.tf
-  AWS_BUCKET_NAME_PREFIX: "1terraform-state-for-telegram-bot-serverless" 
+  AWS_BUCKET_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless" 
   AWS_DYNAMO_DB_TABLE_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless-locking"
 
   AWS_REGION: ${{ vars.AWS_REGION }}
