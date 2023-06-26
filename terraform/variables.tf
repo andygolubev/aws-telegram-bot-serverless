@@ -20,7 +20,7 @@ variable "logging_level" {
   }
 }
 
-variable "log-group-retention-period" {
+variable "log_group_retention_period" {
   description = "Log group retention period"
   type        = number
   default     = 7

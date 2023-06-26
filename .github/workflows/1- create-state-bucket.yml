@@ -9,6 +9,7 @@ env:
   AWS_DYNAMO_DB_TABLE_NAME_PREFIX: "terraform-state-for-telegram-bot-serverless-locking"
   # must be the same as in the 2-deploy-bot.yml
   AWS_REGION: "us-west-2"
+  #!!! if you deploy to us-east-1 -> remove "--create-bucket-configuration LocationConstraint=$AWS_REGION" from "aws s3api create-bucket" command
   
 permissions:
   contents: read
