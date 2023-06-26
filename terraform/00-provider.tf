@@ -5,7 +5,7 @@ terraform {
     # It will be replaced in the pipeline by the command: sed -i 's/us-east-1/${{ env.AWS_REGION }}/g' 00-provider.tf 
     #
 
-    bucket         = "terraform-state-for-telegram-bot-serverless-us-east-1"
+    bucket         = "1terraform-state-for-telegram-bot-serverless-us-east-1"
     key            = "terraform-state-for-telegram-bot-serverless-us-east-1/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-state-for-telegram-bot-serverless-locking-us-east-1"
