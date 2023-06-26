@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Local run for dev
+
 AWS_REGION="us-east-1"
 AWS_BUCKET_NAME="terraform-state-for-telegram-bot-serverless"
 AWS_DYNAMO_DB_TABLE_NAME="terraform-state-for-telegram-bot-serverless-locking"
