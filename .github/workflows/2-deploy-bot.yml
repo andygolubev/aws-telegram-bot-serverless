@@ -6,7 +6,7 @@ on:
 env:
   AWS_BUCKET_NAME: "terraform-state-for-telegram-bot-serverless"
   AWS_DYNAMO_DB_TABLE_NAME: "terraform-state-for-telegram-bot-serverless-locking"
-  AWS_REGION: "us-east-1"
+  AWS_REGION: "us-west-1"
   TERRAFORM_PATH: "./terraform/"
 
 permissions:
@@ -36,7 +36,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Replace Region in Provider section of Terraform  
-      run: sed -i 's/us-east-1/eu-central-1/g' $TERRAFORM_PATH/00-provider.tf ; cat $TERRAFORM_PATH/00-provider.tf
+      run: sed -i 's/us-east-1/$AWS_REGION/g' $TERRAFORM_PATH/00-provider.tf ; cat $TERRAFORM_PATH/00-provider.tf
 
     # - name: Terraform Init
     #   run: terraform -chdir=$TERRAFORM_PATH init
