@@ -35,14 +35,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Terraform Init
-      run: terraform -chdir=$TERRAFORM_PATH init
+    - name: Replace Region in Provider section of Terraform
+      with:
+        aws-region: ${{ env.AWS_REGION }}     
+      run: sed -i 's/us-east-1/eu-central-1/g' 00-provider.tf ; cat 00-provider.tf
 
-    - name: Terraform Format
-      run: terraform -chdir=$TERRAFORM_PATH fmt -check
+    # - name: Terraform Init
+    #   run: terraform -chdir=$TERRAFORM_PATH init
 
-    - name: Terraform Plan
-      run: terraform -chdir=$TERRAFORM_PATH plan -input=false
+    # - name: Terraform Format
+    #   run: terraform -chdir=$TERRAFORM_PATH fmt -check
+
+    # - name: Terraform Plan
+    #   run: terraform -chdir=$TERRAFORM_PATH plan -input=false
       
-    - name: Terraform Apply
-      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false
+    # - name: Terraform Apply
+    #   run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false
