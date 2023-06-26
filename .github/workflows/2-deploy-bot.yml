@@ -43,7 +43,7 @@ jobs:
       run: terraform -chdir=$TERRAFORM_PATH fmt -check
 
     - name: Terraform Plan
-      run: terraform -chdir=$TERRAFORM_PATH plan -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
+      run: terraform -chdir=$TERRAFORM_PATH plan -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVEL }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
       
     - name: Terraform Apply
-      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVELBOT_TOKEN }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
+      run: terraform -chdir=$TERRAFORM_PATH apply -auto-approve -input=false -var "aws_region=${{ env.AWS_REGION }}" -var="bot_token=${{ secrets.BOT_TOKEN }}" -var="logging_level=${{ env.LOGGING_LEVEL }}" -var "log_group_retention_period=${{ env.LOG_GROUP_RETENTION_PERIOD }}"
