@@ -29,9 +29,9 @@ jobs:
     - name: Create a bucket
       run: |
         if [[ "$AWS_REGION" == "us-east-1" ]]; then
-          $LOCATION_CONSTRAINT=""
+          LOCATION_CONSTRAINT = ""
         else
-          $LOCATION_CONSTRAINT="$AWS_REGION"
+          LOCATION_CONSTRAINT = $AWS_REGION
         fi
         aws s3api create-bucket --bucket $AWS_BUCKET_NAME_PREFIX-$AWS_REGION --region $AWS_REGION --no-cli-pager --create-bucket-configuration LocationConstraint=$LOCATION_CONSTRAINT
         aws s3api put-bucket-versioning --bucket $AWS_BUCKET_NAME_PREFIX-$AWS_REGION --versioning-configuration Status=Enabled
