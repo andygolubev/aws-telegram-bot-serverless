@@ -7,6 +7,12 @@ resource "null_resource" "pip-install" {
       pip3 install -r ../lambda/bot-dependencies-layer/requirements.txt -t /tmp/packages/python/
       EOF
   }
+
+  # Run this resource each time
+  triggers = {
+    timestamp = timestamp()
+  }
+
 }
 
 data "archive_file" "layer-zip-file" {
