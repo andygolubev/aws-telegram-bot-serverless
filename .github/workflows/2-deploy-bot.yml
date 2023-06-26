@@ -6,8 +6,7 @@ on:
 env:
   AWS_REGION: "us-west-2"
   TERRAFORM_PATH: "./terraform/"
-  # BOT_TOKEN : ${{ secrets.BOT_TOKEN }}
-  LOGGING_LEVEL: "ERROR"
+  LOGGING_LEVEL: "DEBUG"
   LOG_GROUP_RETENTION_PERIOD: 5
 
 permissions:
